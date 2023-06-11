@@ -1,45 +1,45 @@
-VARIABLE NEXT-ADDR
+VARIABLE NEXT-TERM-ADDR
 
 : BACKWARDS ( addr -- addr' )
   -1 CELLS + ;
 
 : ADD ( addr -- [addr]+[addr+1] )
-  DUP CELL+ @ SWAP @ + ;
+  DUP @ SWAP CELL+ @ + ;
 
 : TERM, ( n -- )
-    NEXT-ADDR @ !
-    NEXT-ADDR @ CELL + NEXT-ADDR ! ;
+  NEXT-TERM-ADDR @ !
+  CELL NEXT-TERM-ADDR +! ;
 
 : LINE,
-  NEXT-ADDR @
+  NEXT-TERM-ADDR @
   1 TERM,
-  BACKWARDS                      
+  BACKWARDS
   BEGIN
     BACKWARDS
     DUP ADD TERM,
-    DUP @ 1 =          
+    DUP @ 1 =
   UNTIL DROP
   1 TERM, ;
 
 : LINES, ( n -- )
-    0 DO LINE, LOOP ;
+  0 DO LINE, LOOP ;
 
 : SUM ( n -- n )
-    DUP IF 1+ 0 SWAP 1 DO I + LOOP THEN ;
-        
+  DUP IF 1+ 0 SWAP 1 DO I + LOOP THEN ;
+
 : .LINE ( addr,n -- )
-    0 DO DUP I CELLS + @ . LOOP CR DROP ;
-    
+  0 DO DUP I CELLS + @ . LOOP CR DROP ;
+
 : .LINES ( addr,n -- ) 
-    0 DO I SUM CELLS OVER + I 1+ .LINE LOOP DROP ;
+  0 DO I SUM CELLS OVER + I 1+ .LINE LOOP DROP ;
 
 CREATE TRIANGLE 20 SUM CELLS ALLOT
-TRIANGLE NEXT-ADDR !
-1 TERM, 
-1 TERM, 1 TERM, 
+TRIANGLE NEXT-TERM-ADDR !
+1 TERM,
+1 TERM, 1 TERM,
 23 LINES,
 
-TRIANGLE 25 .LINES
+CR TRIANGLE 25 .LINES
 BYE
 
 
